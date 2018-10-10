@@ -1,0 +1,10 @@
+{
+  "name": "hydro",
+  "version": "1.0.0",
+  "description": "Cooper Union Hydroponics System Automization and Data Analytics",
+  "main": "index.js",
+  "repository": "https://github.com/dhvanilshah/cooper-hydroponics.git",
+  "author": "Dhvanil Shah",
+  "license": "MIT",
+  "private": true
+}
