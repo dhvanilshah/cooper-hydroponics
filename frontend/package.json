@@ -19,6 +19,9 @@
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject"
   },
+  "engines": {
+    "yarn": "1.13.0"
+  },
   "browserslist": [
     ">0.2%",
     "not dead",

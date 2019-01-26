@@ -35,6 +35,9 @@
     "react": "^16.4.2",
     "text-encoding": "^0.6.4"
   },
+  "engines": {
+    "yarn": "1.13.0"
+  },
   "devDependencies": {
     "prettier": "1.14.0",
     "ws": "3.3.2"
