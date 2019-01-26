@@ -22,6 +22,9 @@
   "engines": {
     "yarn": "1.13.0"
   },
+  "resolutions": {
+    "**/event-stream": "^4.0.1"
+  },
   "browserslist": [
     ">0.2%",
     "not dead",
