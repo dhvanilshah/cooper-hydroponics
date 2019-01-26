@@ -41,5 +41,8 @@
   "devDependencies": {
     "prettier": "1.14.0",
     "ws": "3.3.2"
+  },
+  "resolutions": {
+    "**/event-stream": "^4.0.1"
   }
 }
