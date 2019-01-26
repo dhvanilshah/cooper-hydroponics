@@ -7,13 +7,36 @@
   "author": "Dhvanil Shah",
   "license": "MIT",
   "scripts": {
-    "start": "node backend/index.js",
+    "start": "nodemon backend/index.js",
     "heroku-postbuild": "cd frontend && yarn && yarn run build",
     "build": "cd frontend && yarn && yarn run build",
     "dev": "cd frontend && yarn run start"
   },
   "private": true,
   "dependencies": {
-    "antd": "^3.10.0"
+    "antd": "^3.10.0",
+    "apollo-engine": "^1.1.2",
+    "apollo-server": "^2.0.0",
+    "apollo-server-express": "^2.0.4",
+    "babel-preset-node6": "^11.0.0",
+    "cors": "^2.8.4",
+    "delay": "^3.0.0",
+    "dotenv": "^6.1.0",
+    "express": "^4.16.3",
+    "graphql": "^0.13.2",
+    "graphql-tools": "^3.0.5",
+    "ipfs-api": "^22.2.4",
+    "lodash": "^4.17.11",
+    "moment": "^2.22.2",
+    "mongodb": "^3.1.1",
+    "mongoose": "^5.2.5",
+    "node-fetch": "^2.2.0",
+    "nodemon": "^1.18.6",
+    "react": "^16.4.2",
+    "text-encoding": "^0.6.4"
+  },
+  "devDependencies": {
+    "prettier": "1.14.0",
+    "ws": "3.3.2"
   }
 }

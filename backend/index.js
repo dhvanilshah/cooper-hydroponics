@@ -9,7 +9,7 @@ const models = require("./data/models");
 require("dotenv").config();
 
 const environment = process.env.NODE_ENV;
-const secret = process.env.SECRET;
+//const secret = process.env.SECRET;
 const db = process.env.DB;
 var port = process.env.PORT;
 
@@ -30,7 +30,7 @@ mongoose
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: { models, secret }
+  context: { models }
 });
 
 const app = express();
