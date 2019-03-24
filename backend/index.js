@@ -30,7 +30,16 @@ mongoose
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: { models }
+  context: ({ req }) => {
+    // get the user token from the headers
+    const system = req.headers.system || "";
+
+    // try to retrieve a user with the token
+    // const user = getUser(token);
+
+    // add the user to the context
+    return { system, models };
+  }
 });
 
 const app = express();

@@ -34,6 +34,9 @@ const SystemSchema = new Schema({
   //     }
   //   ],
   sensors: [String],
+  waterTemp: Number,
+  tds: Number,
+  waterLevel: Number,
   mounted: {
     type: Boolean,
     default: false,

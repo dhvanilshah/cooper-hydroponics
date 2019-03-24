@@ -1,9 +1,11 @@
 const System = require("./models/system");
-const Reading = require("./models/reading");
+const Temperature = require("./models/temperature");
+const TDS = require("./models/tds");
 const Harvest = require("./models/harvest");
 
 module.exports = {
   System: System,
-  Reading: Reading,
-  Harvest: Harvest
+  Temperature: Temperature,
+  Harvest: Harvest,
+  TDS: TDS
 };

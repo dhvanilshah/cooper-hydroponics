@@ -46,6 +46,9 @@ const typeDefs = gql`
 
   type Mutation {
     create(name: String!): System
+    recordTemp(value: Float!): String
+    recordTDS(value: Float!): String
+    recordReadings(waterTemp: Float, tds: Float, waterLevel: Int): String
   }
 `;
 
