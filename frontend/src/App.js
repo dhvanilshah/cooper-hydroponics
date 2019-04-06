@@ -1,41 +1,47 @@
 import React, { Component } from "react";
-import { Table, Card, Layout, Menu } from "antd";
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
+import PublicRoutes from "./router";
+import { ApolloClient, InMemoryCache } from "apollo-boost";
+import { ApolloProvider } from "react-apollo";
+import { createHttpLink } from "apollo-link-http";
+import { setContext } from "apollo-link-context";
+import Startup from "./startup";
 import "./App.css";
-import { lightColums, lightData } from "./test/lightshced";
-import System from "./screens/System";
-import Add from "./screens/Add";
-import LoginButton from "./utils/login";
-import LearnMore from "./utils/learnMore";
 
-const { Header, Content, Footer } = Layout;
+const httpLink = createHttpLink({
+  uri: "http://localhost:8000/api"
+});
+
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const token = localStorage.getItem("hydroponics-token");
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      "hydroponics-token": token ? `${token}` : ""
+    }
+  };
+});
+
+export const client = new ApolloClient({
+  // uri: process.env.API
+  //uri: "https://shellfish-traceability.herokuapp.com/api"
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache()
+});
 
 class App extends Component {
   render() {
     return (
-      <Layout className="layout">
-        <Header className="header">
-          <div className="logo">COOPER HYDROPONICS</div>
-          <Menu
-            theme="dark"
-            mode="horizontal"
-            defaultSelectedKeys={["2"]}
-            style={{ lineHeight: "64px", float: "right" }}
-          >
-            <Menu.Item key="1">
-              <LoginButton />
-            </Menu.Item>
-            <Menu.Item key="2">
-              <LearnMore />
-            </Menu.Item>
-          </Menu>
-        </Header>
-        <Content style={{ padding: "0 0px", marginTop: 64 }}>
-          <System />
-        </Content>
-        <Footer style={{ textAlign: "center" }}>
-          COOPER UNION HYDROPONICS © 2019 Created by Dhvanil Shah
-        </Footer>
-      </Layout>
+      <ApolloProvider client={client}>
+        <Provider store={store}>
+          <Startup>
+            <PublicRoutes />
+          </Startup>
+        </Provider>
+      </ApolloProvider>
     );
   }
 }

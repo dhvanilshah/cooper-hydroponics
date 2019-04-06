@@ -34,6 +34,23 @@ const typeDefs = gql`
     dateHarvested: String
   }
 
+  type User {
+    _id: String
+    firstName: String
+    lastName: String
+    email: String
+    password: String
+    role: String
+    dateCreated: String
+    _farms: [String]
+  }
+
+  type Farms {
+    _id: String
+    name: String
+    description: String
+  }
+
   input ScheduleIn {
     action: String
     time: String
@@ -41,11 +58,25 @@ const typeDefs = gql`
   }
 
   type Query {
-    dummy: String
+    getFarms: [Farms]
   }
 
   type Mutation {
     create(name: String!): System
+    signup(
+      firstName: String!
+      lastName: String!
+      email: String!
+      password: String!
+      role: String
+    ): String
+    signin(email: String!, password: String!): String
+    createFarm(
+      name: String!
+      location: String!
+      zipcode: Int!
+      description: String!
+    ): String
   }
 `;
 

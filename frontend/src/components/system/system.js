@@ -1,39 +1,18 @@
 import React, { Component } from "react";
-import { Table, Button, Card, Icon } from "antd";
-import "../App.css";
-import { lightColums, lightData } from "../test/lightshced";
-import { data } from "../test/test_sys_data";
-import AddSystem from "../utils/addSystem";
+import { Table, Button, Card, Icon, Select } from "antd";
+import { lightColums } from "./lightTable";
+import { data } from "./test_sys_data";
+
+const Option = Select.Option;
+
+function handleChange(value) {
+  console.log(`selected ${value}`);
+}
 
 class System extends Component {
   render() {
     return (
       <div>
-        <div
-          style={{
-            paddingLeft: 24,
-            paddingRight: 24,
-            width: "100%"
-          }}
-        >
-          {/* <div
-            style={{
-              float: "left"
-            }}
-          >
-            HELLO
-          </div> */}
-          <div
-            style={{
-              float: "right"
-            }}
-          >
-            {/* <Button type="primary" onClick={this.showDrawer}>
-              <Icon type="plus" /> New account
-            </Button> */}
-            <AddSystem />
-          </div>
-        </div>
         <div
           style={{
             padding: 24,
