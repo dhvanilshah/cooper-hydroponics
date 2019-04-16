@@ -37,6 +37,14 @@ class Signup extends Component {
     }
   }
 
+  componentDidMount() {
+    if (this.props.isLoggedIn == true) {
+      this.setState({
+        redirectToReferrer: true
+      });
+    }
+  }
+
   handleLogin = token => {
     const { login } = this.props;
     if (this.state.showError) this.setState({ showError: false });

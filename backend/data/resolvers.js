@@ -11,11 +11,10 @@ const resolvers = {
       if (!user) throw new Error("invalid token");
 
       if (user._farms.length == 0) {
-        return null;
+        throw new Error("The user has no farms");
       }
 
       const farms = user._farms.map(async id => {
-        console.log(id);
         const farm = await models.Farm.findOne({ _id: id });
         if (!farm) throw new Error("Unable to find some farms. Try again");
         // console.log(farm.name);
@@ -23,6 +22,27 @@ const resolvers = {
       });
 
       return farms;
+    },
+    getSystems: async (root, { farm }, { models, secret, authToken }) => {
+      const user = await utils.verifyUserToken(authToken, secret);
+      if (!user) throw new Error("invalid token");
+
+      const parentFarm = await models.Farm.findOne({ _id: farm });
+
+      if (!parentFarm)
+        throw new Error("This farm could not be found. Please refresh");
+      if (parentFarm._systems.length == 0)
+        throw new Error(
+          "There are no systems associated with this farm. Please add a system."
+        );
+
+      const systems = parentFarm._systems.map(async systemId => {
+        const system = await models.System.findOne({ _id: systemId });
+        // throw new Error("This farm has deprecated or deleted systems. Could not resolve issue.");
+        return system;
+      });
+
+      return systems;
     }
   },
   Mutation: {
@@ -105,9 +125,68 @@ const resolvers = {
 
       if (!newFarm) throw new Error("This farm could not be created.");
 
-      await user.updateO({ $push: { _farms: newFarm.id } });
+      await user.updateOne({ $push: { _farms: newFarm._id } });
 
       return "Success";
+    },
+    createSystem: async (
+      root,
+      { name, produce, farm },
+      { models, secret, authToken }
+    ) => {
+      const user = await utils.verifyUserToken(authToken, secret);
+      if (!user) throw new Error("invalid token");
+
+      const parentFarm = await models.Farm.findOne({ _id: farm });
+
+      if (!parentFarm)
+        throw new Error(
+          "This system could not associated to a farm. Please refresh"
+        );
+
+      const newSystem = await models.System.create({
+        name,
+        produce,
+        farm: parentFarm._id
+      });
+
+      if (!newSystem) throw new Error("This system could not be created.");
+
+      await parentFarm.updateOne({ $push: { _systems: newSystem._id } });
+
+      return newSystem.id;
+    },
+    recordReadings: async (
+      root,
+      { temp, tds, wl },
+      { models, systemToken }
+    ) => {
+      console.log(systemToken);
+      const system = await models.System.findOne({ _id: systemToken });
+      if (!system) return false;
+
+      if (system.mounted == false) {
+        await system.updateOne({ mounted: true });
+      }
+
+      await system.updateOne({
+        waterTemp: temp,
+        waterLevel: wl,
+        tds: tds,
+        lastReading: new Date()
+      });
+
+      const tempRecord = await models.Temp.create({
+        value: temp,
+        _systemId: system._id
+      });
+
+      const tdsRecord = await models.TDS.create({
+        value: tds,
+        _systemId: system._id
+      });
+
+      return true;
     }
   }
 };

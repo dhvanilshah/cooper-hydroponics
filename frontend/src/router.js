@@ -10,6 +10,8 @@ import { connect } from "react-redux";
 import Signin from "./pages/signin/signin";
 import Signup from "./pages/signinup/signup";
 import Home from "./pages/home/home";
+import AddFarm from "./pages/addfarm/addfarm";
+import AddSystem from "./pages/addsystem/addsystem";
 
 const { checkAuthorization } = authActions;
 
@@ -31,15 +33,6 @@ const RestrictedRoute = ({ component: Component, isLoggedIn, ...rest }) => (
   />
 );
 
-// class PublicRoutes extends Component {
-//   componentDidMount() {
-//     this.props.checkAuthorization();
-//   }
-//   render() {
-//     const { isLoggedIn } = this.props;
-//     return <VisibleRoutes isLoggedIn={isLoggedIn} />;
-//   }
-// }
 const PublicRoutes = ({ isLoggedIn }) => {
   return (
     <Router>
@@ -61,7 +54,16 @@ const PublicRoutes = ({ isLoggedIn }) => {
           component={Home}
           isLoggedIn={isLoggedIn}
         />
-        {/* <Route exact path={"/home"} component={Home} /> */}
+        <RestrictedRoute
+          path="/addfarm"
+          component={AddFarm}
+          isLoggedIn={isLoggedIn}
+        />
+        <RestrictedRoute
+          path="/addsystem"
+          component={AddSystem}
+          isLoggedIn={isLoggedIn}
+        />
       </Switch>
     </Router>
   );

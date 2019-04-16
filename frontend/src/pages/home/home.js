@@ -19,7 +19,13 @@ class Home extends Component {
     return (
       <Layout className="layout">
         <Header />
-        <Content style={{ padding: "0 0px", marginTop: 24 }}>
+        <Content
+          style={{
+            padding: "0 0px",
+            marginTop: 24,
+            height: window.innerHeight * 0.9
+          }}
+        >
           <Selector />
           <System />
         </Content>

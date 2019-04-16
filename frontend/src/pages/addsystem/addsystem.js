@@ -1,53 +1,35 @@
-import { Layout, Form, Icon, Input, Button, Checkbox } from "antd";
+import { Layout, Select, Icon, Input, Button, Checkbox } from "antd";
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import "antd/dist/antd.css";
-import "./signin.css";
 import Header from "../../components/header/header";
 import Footer from "../../components/footer/footer";
 import { connect } from "react-redux";
 import authActions from "../../redux/auth/actions";
 import { Mutation } from "react-apollo";
-import { SIGNIN } from "../../api/authentication";
-
-const { login } = authActions;
+import { SIGNUP } from "../../api/authentication";
+import { ADDSYSTEM } from "../../api/farms";
 const { Content } = Layout;
+const { TextArea } = Input;
+const Option = Select.Option;
 
-class Signin extends Component {
-  state = {
-    redirectToReferrer: false,
-    email: "",
-    password: "",
-    showError: false,
-    errorMessage: "Some Error"
-  };
-
-  componentWillReceiveProps(nextProps) {
-    if (
-      this.props.isLoggedIn !== nextProps.isLoggedIn &&
-      nextProps.isLoggedIn === true
-    ) {
-      this.setState({
-        redirectToReferrer: true
-      });
-    }
+class AddSystem extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      produce: "",
+      name: "",
+      showError: false,
+      errorMessage: "",
+      redirectToReferrer: false
+    };
   }
 
-  componentDidMount() {
-    if (this.props.isLoggedIn == true) {
-      this.setState({
-        redirectToReferrer: true
-      });
-    }
-  }
-
-  handleLogin = token => {
-    const { login } = this.props;
+  handleCreate = () => {
     if (this.state.showError) {
       this.setState({ showError: false });
     }
-    //console.log(token, id, firstName, lastName, role);
-    login(token);
+    this.setState({ redirectToReferrer: true });
   };
 
   handleError = message => {
@@ -58,14 +40,15 @@ class Signin extends Component {
   };
 
   render() {
-    const { login } = this.props;
+    // const { isLoggedIn, login } = this.props;
     const {
-      redirectToReferrer,
-      email,
-      password,
       showError,
-      errorMessage
+      errorMessage,
+      produce,
+      name,
+      redirectToReferrer
     } = this.state;
+    const { currentFarm } = this.props;
     if (redirectToReferrer) {
       return <Redirect to={{ pathname: "/home" }} />;
     }
@@ -84,36 +67,37 @@ class Signin extends Component {
           className="login-form"
         >
           <h1 style={{ margin: "24px 0px 0px 0px", textAlign: "center" }}>
-            HYDROPONICS
+            ADD A SYSTEM
           </h1>
           <Input
-            prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
-            placeholder="Email"
+            placeholder="Name"
+            onChange={e => this.setState({ name: e.target.value })}
             style={{ margin: "24px 0px 0px 0px" }}
-            onChange={e => this.setState({ email: e.target.value })}
           />
-          <Input
-            prefix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
-            type="password"
-            placeholder="Password"
-            style={{ margin: "24px 0px" }}
-            onChange={e => this.setState({ password: e.target.value })}
-          />
-          <Checkbox>Remember me</Checkbox>
-          <a className="login-form-forgot" href="">
-            Forgot password
-          </a>
+          <Select
+            mode="multiple"
+            style={{ width: "100%", margin: "24px 0px 0px 0px" }}
+            placeholder="Please select produce"
+            // defaultValue={}
+            onChange={value => this.setState({ produce: value })}
+          >
+            <Option key={"lettuce"}>Lettuce</Option>
+            <Option key={"thai-basil"}>Thai Basil</Option>
+            <Option key={"salicornia-b"}>Salicornia Bigelovii</Option>
+            <Option key={"salicornia-eu"}>Salicornia Europea</Option>
+          </Select>
+
           <Mutation
-            mutation={SIGNIN}
-            variables={{ email, password }}
+            mutation={ADDSYSTEM}
+            variables={{ name, produce, farm: currentFarm }}
             onCompleted={data => {
-              this.handleLogin(data.signin);
+              this.handleCreate(data.signin);
             }}
             onError={error => {
               this.handleError(error.message.substr(15));
             }}
           >
-            {(signin, { loading }) =>
+            {(createSystem, { loading }) =>
               loading ? (
                 <Button
                   type="primary"
@@ -121,23 +105,25 @@ class Signin extends Component {
                   style={{ margin: "10px 0px 5px 0px" }}
                   loading={true}
                 >
-                  Log in
+                  Add System
                 </Button>
               ) : (
                 <Button
                   type="primary"
                   className="login-form-button"
                   style={{ margin: "10px 0px 5px 0px" }}
-                  onClick={signin}
-                  loading={false}
+                  onClick={createSystem}
                 >
-                  Log in
+                  Add System
                 </Button>
               )
             }
           </Mutation>
-          {!showError ? null : <p>{errorMessage}</p>}
-          Or <a href="/signup">register now!</a>
+
+          {!showError ? null : (
+            <p style={{ marginBottom: "20px" }}>{errorMessage}</p>
+          )}
+          <a href="/">cancel</a>
         </Content>
         <Footer />
       </Layout>
@@ -145,9 +131,7 @@ class Signin extends Component {
   }
 }
 
-export default connect(
-  state => ({
-    isLoggedIn: state.Auth.idToken !== null
-  }),
-  { login }
-)(Signin);
+export default connect(state => ({
+  isLoggedIn: state.Auth.idToken !== null,
+  currentFarm: state.Farm.currentFarmId
+}))(AddSystem);

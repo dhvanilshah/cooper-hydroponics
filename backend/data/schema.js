@@ -9,10 +9,15 @@ const typeDefs = gql`
   type System {
     _id: String
     name: String
-    pumpSchedule: [Schedule]
-    lightSchedule: [Schedule]
-    sensors: String
-    mounted: String
+    mounted: Boolean
+    waterTemp: Int
+    tds: Int
+    waterLevel: Boolean
+    pumpStatus: Boolean
+    lightStatus: Boolean
+    lastReading: String
+    lastHarvest: String
+    produce: [String]
     dateCreated: String
   }
 
@@ -59,6 +64,7 @@ const typeDefs = gql`
 
   type Query {
     getFarms: [Farms]
+    getSystems(farm: String!): [System]
   }
 
   type Mutation {
@@ -77,6 +83,8 @@ const typeDefs = gql`
       zipcode: Int!
       description: String!
     ): String
+    createSystem(name: String!, produce: [String], farm: String): String
+    recordReadings(temp: Float, tds: Int, wl: Boolean): Boolean
   }
 `;
 

@@ -4,6 +4,7 @@ import { Query } from "react-apollo";
 import { connect } from "react-redux";
 import { GETFARMS } from "../../api/farms";
 import farmActions from "../../redux/farm/actions";
+import { Redirect } from "react-router-dom";
 
 const { updateFarm } = farmActions;
 
@@ -14,14 +15,26 @@ class System extends Component {
     super(props);
     this.state = {
       farms: [],
-      disabled: true
+      disabled: false,
+      redirectFarm: false,
+      redirectSystem: false
     };
   }
+
+  handleFarmClick = () => {
+    this.setState({ redirectFarm: true });
+  };
+
+  handleSystemClick = () => {
+    this.setState({ redirectSystem: true });
+  };
 
   handleError(error) {
     if ((error = "invalid token")) {
       //   call logout here
       return;
+    } else {
+      this.setState({ disabled: true });
     }
   }
 
@@ -32,8 +45,15 @@ class System extends Component {
   }
 
   render() {
-    const { farms, disabled } = this.state;
-    const { updateFarm, currentFarm } = this.props;
+    const { farms, disabled, redirectFarm, redirectSystem } = this.state;
+    const { updateFarm, currentFarm, activeFarm } = this.props;
+
+    if (redirectFarm) {
+      return <Redirect push to="/addfarm" />;
+    }
+    if (redirectSystem) {
+      return <Redirect push to="/addsystem" />;
+    }
     return (
       <div
         style={{
@@ -64,13 +84,17 @@ class System extends Component {
                     width: 120,
                     marginRight: 20
                   }}
-                  onChange={value => updateFarm(value)}
+                  onChange={(value, key) => updateFarm(value, key.props.name)}
                   loading={loading}
                   disabled={disabled}
                 >
                   {farms.map(farm => {
                     return (
-                      <Option value={farm._id.toString()} key={farm._id}>
+                      <Option
+                        value={farm._id.toString()}
+                        key={farm.name}
+                        name={farm.name}
+                      >
                         {farm.name}
                       </Option>
                     );
@@ -79,7 +103,8 @@ class System extends Component {
               );
             }}
           </Query>
-          <Button type="primary">
+
+          <Button type="primary" onClick={this.handleFarmClick}>
             <Icon type="plus" />
             Farm
           </Button>
@@ -89,7 +114,11 @@ class System extends Component {
             float: "right"
           }}
         >
-          <Button type="primary">
+          <Button
+            type="primary"
+            onClick={this.handleSystemClick}
+            disabled={activeFarm ? false : true}
+          >
             <Icon type="plus" />
             System
           </Button>
@@ -101,7 +130,8 @@ class System extends Component {
 
 export default connect(
   state => ({
-    currentFarm: state.Farm.currentFarm
+    currentFarm: state.Farm.currentFarmName,
+    activeFarm: state.Farm.currentFarmId
   }),
   { updateFarm }
 )(System);
