@@ -10,8 +10,8 @@ const typeDefs = gql`
     _id: String
     name: String
     mounted: Boolean
-    waterTemp: Int
-    tds: Int
+    waterTemp: Float
+    tds: Float
     waterLevel: Boolean
     pumpStatus: Boolean
     lightStatus: Boolean
@@ -63,8 +63,10 @@ const typeDefs = gql`
   }
 
   type Query {
+    hello: String
     getFarms: [Farms]
     getSystems(farm: String!): [System]
+    recordReadings(temp: Float, tds: Float, wl: Int): Boolean
   }
 
   type Mutation {
@@ -84,7 +86,6 @@ const typeDefs = gql`
       description: String!
     ): String
     createSystem(name: String!, produce: [String], farm: String): String
-    recordReadings(temp: Float, tds: Int, wl: Boolean): Boolean
   }
 `;
 

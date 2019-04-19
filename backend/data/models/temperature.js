@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const TempSchema = new Schema({
+const TemperatureSchema = new Schema({
   value: {
     type: Number,
     required: true
@@ -18,6 +18,6 @@ const TempSchema = new Schema({
   }
 });
 
-const Temp = mongoose.model("Temp", TempSchema);
+const Temperature = mongoose.model("Temperature", TemperatureSchema);
 
-module.exports = Temp;
+module.exports = Temperature;

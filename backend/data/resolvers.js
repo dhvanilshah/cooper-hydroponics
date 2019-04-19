@@ -6,6 +6,9 @@ const saltRounds = 10;
 
 const resolvers = {
   Query: {
+    hello: async (root, {}, { models, secret, authToken }) => {
+      return "WORLD";
+    },
     getFarms: async (root, {}, { models, secret, authToken }) => {
       const user = await utils.verifyUserToken(authToken, secret);
       if (!user) throw new Error("invalid token");
@@ -43,6 +46,49 @@ const resolvers = {
       });
 
       return systems;
+    },
+    recordReadings: async (
+      root,
+      { temp, tds, wl },
+      { models, systemToken }
+    ) => {
+      const system = await models.System.findOne({ _id: systemToken });
+      if (!system) return false;
+
+      // const tempA = parseFloat(temp);
+      // const tdsA = parseFloat(tds);
+      const wlA = wl == 1 ? true : false;
+
+      if (system.mounted == false) {
+        await system.updateOne({ mounted: true });
+      }
+
+      await system.updateOne({
+        waterTemp: temp,
+        waterLevel: wlA,
+        tds: tds,
+        lastReading: new Date()
+      });
+
+      const tempRecord = await models.Temperature.create({
+        value: temp,
+        _systemId: system._id
+      });
+
+      const tdsRecord = await models.TDS.create({
+        value: tds,
+        _systemId: system._id
+      });
+
+      if (!tempRecord) {
+        return false;
+      }
+
+      if (!tdsRecord) {
+        return false;
+      }
+
+      return true;
     }
   },
   Mutation: {
@@ -155,38 +201,6 @@ const resolvers = {
       await parentFarm.updateOne({ $push: { _systems: newSystem._id } });
 
       return newSystem.id;
-    },
-    recordReadings: async (
-      root,
-      { temp, tds, wl },
-      { models, systemToken }
-    ) => {
-      console.log(systemToken);
-      const system = await models.System.findOne({ _id: systemToken });
-      if (!system) return false;
-
-      if (system.mounted == false) {
-        await system.updateOne({ mounted: true });
-      }
-
-      await system.updateOne({
-        waterTemp: temp,
-        waterLevel: wl,
-        tds: tds,
-        lastReading: new Date()
-      });
-
-      const tempRecord = await models.Temp.create({
-        value: temp,
-        _systemId: system._id
-      });
-
-      const tdsRecord = await models.TDS.create({
-        value: tds,
-        _systemId: system._id
-      });
-
-      return true;
     }
   }
 };
