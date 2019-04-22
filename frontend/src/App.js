@@ -10,7 +10,8 @@ import Startup from "./startup";
 import "./App.css";
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:8000/api"
+  // uri: "http://localhost:8000/api"
+  uri: "cooper-hydroponics.herokuapp.com/api"
 });
 
 const authLink = setContext((_, { headers }) => {
