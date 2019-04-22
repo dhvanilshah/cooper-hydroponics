@@ -3,15 +3,15 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const TemperatureSchema = new Schema({
-  system: {
-    type: Schema.Types.ObjectId,
-    required: true
-  },
   value: {
     type: Number,
     required: true
   },
-  dateEntered: {
+  _systemId: {
+    type: Schema.Types.ObjectId,
+    required: true
+  },
+  dateCreated: {
     type: Date,
     default: Date.now,
     required: true

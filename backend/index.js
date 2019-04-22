@@ -9,7 +9,7 @@ const models = require("./data/models");
 require("dotenv").config();
 
 const environment = process.env.NODE_ENV;
-//const secret = process.env.SECRET;
+const secret = process.env.SECRET;
 const db = process.env.DB;
 var port = process.env.PORT;
 
@@ -30,16 +30,12 @@ mongoose
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => {
-    // get the user token from the headers
-    const system = req.headers.system || "";
-
-    // try to retrieve a user with the token
-    // const user = getUser(token);
-
-    // add the user to the context
-    return { system, models };
-  }
+  context: ({ req, res }) => ({
+    models,
+    secret,
+    authToken: req.headers["hydroponics-token"],
+    systemToken: req.headers["system-token"]
+  })
 });
 
 const app = express();

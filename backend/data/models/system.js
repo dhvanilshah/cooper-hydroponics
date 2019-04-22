@@ -34,17 +34,45 @@ const SystemSchema = new Schema({
   //     }
   //   ],
   sensors: [String],
-  waterTemp: Number,
-  tds: Number,
-  waterLevel: Number,
+  waterTemp: {
+    type: Number,
+    default: 0
+  },
+  tds: {
+    type: Number,
+    default: 0
+  },
+  waterLevel: {
+    type: Boolean,
+    default: false
+  },
+  pumpStatus: {
+    type: Boolean,
+    default: false
+  },
+  lightStatus: {
+    type: Boolean,
+    default: false
+  },
+
   mounted: {
     type: Boolean,
     default: false,
     required: true
   },
+  lastReading: Date,
+  lastHarvest: Date,
   dateCreated: {
     type: Date,
     default: Date.now,
+    required: true
+  },
+  produce: {
+    type: [String],
+    required: true
+  },
+  farm: {
+    type: Schema.Types.ObjectId,
     required: true
   }
 });

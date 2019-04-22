@@ -9,10 +9,15 @@ const typeDefs = gql`
   type System {
     _id: String
     name: String
-    pumpSchedule: [Schedule]
-    lightSchedule: [Schedule]
-    sensors: String
-    mounted: String
+    mounted: Boolean
+    waterTemp: Float
+    tds: Float
+    waterLevel: Boolean
+    pumpStatus: Boolean
+    lightStatus: Boolean
+    lastReading: String
+    lastHarvest: String
+    produce: [String]
     dateCreated: String
   }
 
@@ -34,6 +39,23 @@ const typeDefs = gql`
     dateHarvested: String
   }
 
+  type User {
+    _id: String
+    firstName: String
+    lastName: String
+    email: String
+    password: String
+    role: String
+    dateCreated: String
+    _farms: [String]
+  }
+
+  type Farms {
+    _id: String
+    name: String
+    description: String
+  }
+
   input ScheduleIn {
     action: String
     time: String
@@ -41,14 +63,29 @@ const typeDefs = gql`
   }
 
   type Query {
-    dummy: String
+    hello: String
+    getFarms: [Farms]
+    getSystems(farm: String!): [System]
+    recordReadings(temp: Float, tds: Float, wl: Int): Boolean
   }
 
   type Mutation {
     create(name: String!): System
-    recordTemp(value: Float!): String
-    recordTDS(value: Float!): String
-    recordReadings(waterTemp: Float, tds: Float, waterLevel: Int): String
+    signup(
+      firstName: String!
+      lastName: String!
+      email: String!
+      password: String!
+      role: String
+    ): String
+    signin(email: String!, password: String!): String
+    createFarm(
+      name: String!
+      location: String!
+      zipcode: Int!
+      description: String!
+    ): String
+    createSystem(name: String!, produce: [String], farm: String): String
   }
 `;
 
