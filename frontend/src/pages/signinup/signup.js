@@ -18,6 +18,7 @@ class Signup extends Component {
     super(props);
     this.state = {
       redirectToReferrer: false,
+      redirectToSignin: false,
       showError: false,
       errorMessage: "Some Error",
       firstName: "",
@@ -59,6 +60,7 @@ class Signup extends Component {
     const { isLoggedIn, login } = this.props;
     const {
       redirectToReferrer,
+      redirectToSignin,
       showError,
       errorMessage,
       firstName,
@@ -70,6 +72,9 @@ class Signup extends Component {
     const token = 1;
     if (redirectToReferrer) {
       return <Redirect to={{ pathname: "/home" }} />;
+    }
+    if (redirectToSignin) {
+      return <Redirect to={{ pathname: "/" }} />;
     }
     return (
       <Layout className="layout">
@@ -164,7 +169,10 @@ class Signup extends Component {
           {!showError ? null : (
             <p style={{ marginBottom: "20px" }}>{errorMessage}</p>
           )}
-          Or <a href="/">sign in.</a>
+          Or{" "}
+          <a onClick={() => this.setState({ redirectToSignin: true })}>
+            sign in.
+          </a>
         </Content>
         <Footer />
       </Layout>

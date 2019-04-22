@@ -16,7 +16,7 @@ class AddFarm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      redirectToReferrer: false,
+      redirectToHome: false,
       showError: false,
       errorMessage: "Some Error",
       name: "",
@@ -47,9 +47,9 @@ class AddFarm extends Component {
       location,
       zipcode,
       description,
-      redirectToReferrer
+      redirectToHome
     } = this.state;
-    if (redirectToReferrer) {
+    if (redirectToHome) {
       return <Redirect to={{ pathname: "/home" }} />;
     }
     return (
@@ -125,7 +125,7 @@ class AddFarm extends Component {
           {!showError ? null : (
             <p style={{ marginBottom: "20px" }}>{errorMessage}</p>
           )}
-          <a href="/">cancel</a>
+          <a onClick={() => this.setState({ redirectToHome: true })}>cancel.</a>
         </Content>
         <Footer />
       </Layout>

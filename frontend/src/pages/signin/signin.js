@@ -19,7 +19,8 @@ class Signin extends Component {
     email: "",
     password: "",
     showError: false,
-    errorMessage: "Some Error"
+    errorMessage: "Some Error",
+    redirectToSignup: false
   };
 
   componentWillReceiveProps(nextProps) {
@@ -61,6 +62,7 @@ class Signin extends Component {
     const { login } = this.props;
     const {
       redirectToReferrer,
+      redirectToSignup,
       email,
       password,
       showError,
@@ -68,6 +70,10 @@ class Signin extends Component {
     } = this.state;
     if (redirectToReferrer) {
       return <Redirect to={{ pathname: "/home" }} />;
+    }
+
+    if (redirectToSignup) {
+      return <Redirect to={{ pathname: "/signup" }} />;
     }
     return (
       <Layout className="layout">
@@ -137,7 +143,10 @@ class Signin extends Component {
             }
           </Mutation>
           {!showError ? null : <p>{errorMessage}</p>}
-          Or <a href="/signup">register now!</a>
+          Or{" "}
+          <a onClick={() => this.setState({ redirectToSignup: true })}>
+            register now!
+          </a>
         </Content>
         <Footer />
       </Layout>

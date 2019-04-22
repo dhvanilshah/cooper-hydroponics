@@ -21,7 +21,8 @@ class AddSystem extends Component {
       name: "",
       showError: false,
       errorMessage: "",
-      redirectToReferrer: false
+      redirectToReferrer: false,
+      redirectToHome: false
     };
   }
 
@@ -46,10 +47,10 @@ class AddSystem extends Component {
       errorMessage,
       produce,
       name,
-      redirectToReferrer
+      redirectToHome
     } = this.state;
     const { currentFarm } = this.props;
-    if (redirectToReferrer) {
+    if (redirectToHome) {
       return <Redirect to={{ pathname: "/home" }} />;
     }
     return (
@@ -123,7 +124,7 @@ class AddSystem extends Component {
           {!showError ? null : (
             <p style={{ marginBottom: "20px" }}>{errorMessage}</p>
           )}
-          <a href="/">cancel</a>
+          <a onClick={() => this.setState({ redirectToHome: true })}>cancel.</a>
         </Content>
         <Footer />
       </Layout>
