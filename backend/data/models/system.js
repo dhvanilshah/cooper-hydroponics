@@ -54,6 +54,7 @@ const SystemSchema = new Schema({
     type: Boolean,
     default: false
   },
+
   mounted: {
     type: Boolean,
     default: false,
